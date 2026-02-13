@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>14/2 - Cún có yêu anh không</title>
+  <style>
+    :root {
+      --bg1: #ffdde1;
+      --bg2: #ee9ca7;
+      --card: rgba(255,255,255,.75);
+      --text: #2b2b2b;
+      --yes: #22c55e;
+      --no: #ef4444;
+      --shadow: 0 18px 60px rgba(0,0,0,.18);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% 20%, #fff 0%, transparent 60%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow: hidden;
+    }
+
+    .card {
+      width: min(760px, 92vw);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px 20px 22px;
+      position: relative;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .sub {
+      margin: 0 0 18px;
+      text-align: center;
+      opacity: .8;
+    }
+
+    .arena {
+      position: relative;
+      margin: 18px auto 10px;
+      width: min(560px, 86vw);
+      height: 220px;
+      border-radius: 22px;
+      border: 1px dashed rgba(0,0,0,.18);
+      background: rgba(255,255,255,.45);
+      overflow: hidden;
+    }
+
+    .btn {
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, filter .15s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,.15);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { transform: scale(.98); }
+
+    .btn-yes { background: var(--yes); color: #fff; }
+    .btn-no  { background: var(--no);  color: #fff; }
+
+    /* đặt nút trong arena */
+    #yesBtn, #noBtn {
+      position: absolute;
+      top: 120px;
+    }
+    #yesBtn { left: 120px; }
+    #noBtn  { left: 300px; }
+
+    .panel {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.6);
+      border: 1px solid rgba(0,0,0,.08);
+      display: none;
+    }
+    .panel.show { display: block; }
+
+    .ytlink {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      text-decoration: none;
+      font-weight: 700;
+      color: #0f172a;
+      background: rgba(0,0,0,.06);
+      padding: 10px 12px;
+      border-radius: 14px;
+    }
+
+    .iframeWrap {
+      margin-top: 12px;
+      aspect-ratio: 16/9;
+      width: 100%;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,.14);
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(0,0,0,.06);
+    }
+    iframe { width: 100%; height: 100%; border: 0; }
+
+    .giftRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 12px;
+    }
+    .btn-gift {
+      background: #111827;
+      color: #fff;
+    }
+
+    .giftBox {
+      display: none;
+      margin-top: 12px;
+    }
+    .giftBox.show { display: block; }
+
+    .giftImg {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 12px 30px rgba(0,0,0,.12);
+      background: rgba(255,255,255,.65);
+    }
+
+    .footerNote {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 13px;
+      opacity: .65;
+    }
+
+    /* trái tim bay bay (nhẹ thôi) */
+    .heart {
+      position: absolute;
+      font-size: 18px;
+      opacity: .35;
+      animation: floatUp 6s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(40px); opacity: .0; }
+      10%  { opacity: .35; }
+      to   { transform: translateY(-340px); opacity: 0; }
+    }
+    .valentineText {
+        margin-top: 18px;
+        text-align: center;
+        font-size: clamp(26px, 4vw, 42px);
+        font-weight: 800;
+        background: linear-gradient(90deg, #ff1e56, #ff6ec7, #ff1e56);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1px;
+        text-shadow: 0 6px 20px rgba(255, 20, 100, 0.35);
+        animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+        from {
+            transform: scale(1);
+            text-shadow: 0 6px 20px rgba(255, 20, 100, 0.35);
+        }
+        to {
+            transform: scale(1.05);
+            text-shadow: 0 10px 30px rgba(255, 20, 100, 0.6);
+        }
+        }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>🐶 Cún có yêu anh không?</h1>
+
+    <div class="arena" id="arena">
+      <button class="btn btn-yes" id="yesBtn">Có</button>
+      <button class="btn btn-no" id="noBtn">Không</button>
+    </div>
+
+    <div class="panel" id="panel">
+      <div>
+        <a class="ytlink" id="ytLink" target="_blank" rel="noopener">
+          ▶️ Mở video YouTube
+        </a>
+      </div>
+
+      <div class="iframeWrap" id="ytEmbedWrap" aria-label="YouTube embed"></div>
+
+      <div class="giftRow">
+        <button class="btn btn-gift" id="giftBtn">🎁 Hiện phần quà nhỏ</button>
+        <span id="giftHint" style="opacity:.7;">(bấm vào đi)</span>
+      </div>
+
+      <div class="giftBox" id="giftBox">
+        <img class="giftImg" id="giftImg" alt="Ảnh chụp màn hình (phần quà)" />
+        <div class="valentineText">💖 Happy Valentine vợ yêu 💖</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ====== CHỈNH 2 THỨ NÀY LÀ XONG ======
+    const YOUTUBE_URL = "https://youtube.com/shorts/Viakq-RPX6Y"; // đổi link video bạn muốn
+    const YOUTUBE_EMBED = "https://www.youtube.com/embed/Viakq-RPX6Y"; // đổi ID cho khớp (hoặc dùng cùng ID)
+
+    // Ảnh chụp màn hình: bạn có 3 cách
+    // 1) Để ảnh cùng thư mục với file này, ví dụ: "gift.png"
+    // 2) Dùng link ảnh online (https://...)
+    // 3) Dùng base64 data url (nặng nhưng gọn 1 file)
+    const GIFT_IMAGE_SRC = "https://raw.githubusercontent.com/scsmla/1422026/refs/heads/main/b3d3dd9c-b01e-4931-8b9b-dfca9d2df9fe.jpg"; // <-- đổi tên ảnh của bạn ở đây
+
+    // ====== LOGIC ======
+    const arena = document.getElementById("arena");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const panel  = document.getElementById("panel");
+
+    const ytLink = document.getElementById("ytLink");
+    const ytEmbedWrap = document.getElementById("ytEmbedWrap");
+
+    const giftBtn = document.getElementById("giftBtn");
+    const giftBox = document.getElementById("giftBox");
+    const giftImg = document.getElementById("giftImg");
+
+    ytLink.href = YOUTUBE_URL;
+    giftImg.src = GIFT_IMAGE_SRC;
+
+    // tạo vài trái tim bay cho vui
+    function spawnHearts() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = Math.random() > 0.5 ? "💗" : "💖";
+      const x = Math.random() * window.innerWidth;
+      heart.style.left = x + "px";
+      heart.style.bottom = "-10px";
+      heart.style.animationDuration = (4.5 + Math.random() * 3.5) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
+    }
+    setInterval(spawnHearts, 650);
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    function moveNoButton() {
+      const a = arena.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+
+      // giới hạn trong arena (chừa padding 10px)
+      const pad = 10;
+      const maxX = a.width - b.width - pad;
+      const maxY = a.height - b.height - pad;
+
+      // random nhưng tránh sát biên quá
+      const x = clamp(pad + Math.random() * maxX, pad, maxX);
+      const y = clamp(pad + Math.random() * maxY, pad, maxY);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+    }
+
+    // Nút "Không" chạy loạn: chạy khi rê chuột / chạm / sắp click
+    ["mouseenter", "mousedown", "touchstart", "pointerdown"].forEach(evt => {
+      noBtn.addEventListener(evt, (e) => {
+        e.preventDefault();
+        moveNoButton();
+      }, { passive: false });
+    });
+
+    // Nếu người ta bấm được thật (hiếm), vẫn chạy tiếp
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    // Nút "Có": hiện panel + link + embed
+    yesBtn.addEventListener("click", () => {
+      panel.classList.add("show");
+
+      // nhét iframe (chỉ tạo 1 lần)
+      if (!ytEmbedWrap.querySelector("iframe")) {
+        const iframe = document.createElement("iframe");
+        iframe.src = YOUTUBE_EMBED;
+        iframe.allow =
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        ytEmbedWrap.appendChild(iframe);
+      }
+
+      // cho “Không” đứng yên luôn cho khỏi phá nữa (tuỳ)
+      noBtn.style.filter = "grayscale(1)";
+      noBtn.style.opacity = "0.7";
+    });
+
+    // Quà nhỏ
+    giftBtn.addEventListener("click", () => {
+      giftBox.classList.toggle("show");
+      giftBtn.textContent = giftBox.classList.contains("show")
+        ? "🎁 Ẩn phần quà"
+        : "🎁 Hiện phần quà nhỏ";
+    });
+
+    // đặt vị trí ban đầu cho nút "Không" nếu màn hình nhỏ
+    window.addEventListener("resize", () => {
+      // giữ nút trong arena sau khi resize
+      moveNoButton();
+    });
+  </script>
+</body>
+</html>
